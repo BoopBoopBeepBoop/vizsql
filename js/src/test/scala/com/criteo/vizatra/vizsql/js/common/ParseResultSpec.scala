@@ -1,11 +1,12 @@
 package com.criteo.vizatra.vizsql.js.common
 
-import org.scalatest.{FunSpec, Matchers}
 import com.criteo.vizatra.vizsql
 import com.criteo.vizatra.vizsql.INTEGER
+import org.scalatest.funspec.AnyFunSpecLike
+import org.scalatest.matchers.should.Matchers
 
 import scala.scalajs.js.JSON
-class ParseResultSpec extends FunSpec with Matchers {
+class ParseResultSpec extends AnyFunSpecLike with Matchers {
   describe("Column") {
     describe("from()") {
       it("converts scala Column to JS object") {

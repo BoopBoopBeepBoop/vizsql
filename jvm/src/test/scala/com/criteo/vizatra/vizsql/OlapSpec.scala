@@ -1,11 +1,13 @@
 package com.criteo.vizatra.vizsql
 
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{Matchers, EitherValues, FlatSpec}
+import org.scalatest.EitherValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.flatspec.AnyFlatSpecLike
 
-class OlapSpec extends FlatSpec with Matchers with EitherValues {
+class OlapSpec extends AnyFlatSpecLike with Matchers with EitherValues {
 
-  implicit val VERTICA = new Dialect {
+  implicit val VERTICA: Dialect = new Dialect {
 
     def parser = new SQL99Parser
 

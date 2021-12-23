@@ -5,9 +5,9 @@ import com.criteo.vizatra.vizsql.js.json.DBReader
 
 import scala.scalajs.js.Dynamic
 import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSExport, ScalaJSDefined}
+import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 
-@JSExport("Database")
+@JSExportTopLevel("Database")
 object Database {
   /**
     * Parses to a VizSQL DB object
@@ -26,7 +26,6 @@ object Database {
   def from(input: Dynamic): Database = new Database(parse(input))
 }
 
-@ScalaJSDefined
 class Database(db: DB) extends js.Object {
   def parse(query: String) = {
     QueryParser.parse(query, db)

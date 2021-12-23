@@ -2,9 +2,10 @@ package com.criteo.vizatra.vizsql.hive
 
 import com.criteo.vizatra.vizsql._
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{Matchers, PropSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.propspec.AnyPropSpecLike
 
-class ParseHiveQuerySpec extends PropSpec with Matchers {
+class ParseHiveQuerySpec extends AnyPropSpecLike with Matchers {
   val queries = TableDrivenPropertyChecks.Table(
     ("Valid Hive query", "Expected AST"),
 

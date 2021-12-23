@@ -9,7 +9,7 @@ case object CamelCase extends Case {
 
 case class Style(pretty: Boolean, keywords: Case, identifiers: Case)
 object Style {
-  implicit val default = Style(true, UpperCase, LowerCase)
+  implicit val default: Style = Style(true, UpperCase, LowerCase)
   val compact = Style(false, UpperCase, LowerCase)
 }
 
@@ -115,5 +115,5 @@ object Show {
   }
   def ~?(placeholder: Placeholder) = Parameter(placeholder)
 
-  implicit def toText(str: String) = Text(str)
+  implicit def toText(str: String): Text = Text(str)
 }

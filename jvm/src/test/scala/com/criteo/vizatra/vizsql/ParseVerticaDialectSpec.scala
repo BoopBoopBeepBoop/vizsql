@@ -2,9 +2,11 @@ package com.criteo.vizatra.vizsql
 
 import com.criteo.vizatra.vizsql.vertica._
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{EitherValues, Matchers, PropSpec}
+import org.scalatest.EitherValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.propspec.AnyPropSpecLike
 
-class ParseVerticaDialectSpec extends PropSpec with Matchers with EitherValues {
+class ParseVerticaDialectSpec extends AnyPropSpecLike with Matchers with EitherValues {
 
   val validVerticaSelectStatements = TableDrivenPropertyChecks.Table(
     ("SQL", "Expected Columns"),

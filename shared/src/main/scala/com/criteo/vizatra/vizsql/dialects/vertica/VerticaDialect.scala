@@ -1,7 +1,7 @@
 package com.criteo.vizatra.vizsql
 
 object vertica {
-  implicit val dialect = new Dialect {
+  implicit val dialect: Dialect = new Dialect {
     lazy val parser = new SQL99Parser
     lazy val functions = postgresql.dialect.functions orElse {
       case "datediff" => new SQLFunction3 {
