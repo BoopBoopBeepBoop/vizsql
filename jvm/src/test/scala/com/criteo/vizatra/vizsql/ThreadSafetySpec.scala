@@ -1,9 +1,11 @@
 package com.criteo.vizatra.vizsql
 
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{Matchers, EitherValues, FlatSpec}
+import org.scalatest.EitherValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.flatspec.AnyFlatSpecLike
 
-class ThreadSafetySpec extends FlatSpec with Matchers with EitherValues {
+class ThreadSafetySpec extends AnyFlatSpecLike with Matchers with EitherValues {
 
   "An SQL parser" should "be thread safe" in {
     val uniqueParser = new SQL99Parser
@@ -210,7 +212,7 @@ class ThreadSafetySpec extends FlatSpec with Matchers with EitherValues {
       }
     }
 
-    Await.result(eventuallyResult, 5 minutes).flatten.forall(identity) shouldBe(true)
+    Await.result(eventuallyResult, 5.minutes).flatten.forall(identity) shouldBe(true)
   }
 
 }

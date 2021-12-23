@@ -1,10 +1,11 @@
 package com.criteo.vizatra.vizsql.js
 
 import com.criteo.vizatra.vizsql._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.funspec.AnyFunSpecLike
+import org.scalatest.matchers.should.Matchers
 
-class QueryParserSpec extends FlatSpec with Matchers {
-  implicit val dialect = sql99.dialect
+class QueryParserSpec extends AnyFunSpecLike with Matchers {
+  implicit val dialect: Dialect = sql99.dialect
   val db = DB(schemas = List(
     Schema(
       "sakila",
@@ -29,36 +30,37 @@ class QueryParserSpec extends FlatSpec with Matchers {
       )
     )
   ))
-  "parse()" should "return a result" in {
-    val result = QueryParser.parse(
-      s"""
-        |SELECT country, city
-        |FROM city JOIN country ON city.country_id = country.country_id
-        |WHERE city IN ?{availableCities}
+  describe("parse()") {
+    it("should return a result") {
+      val result = QueryParser.parse(
+        s"""
+           |SELECT country, city
+           |FROM city JOIN country ON city.country_id = country.country_id
+           |WHERE city IN ?{availableCities}
       """.stripMargin, db)
-    result.error.isDefined shouldBe false
-    result.select.isDefined shouldBe true
-    val select = result.select.get
-    select.columns.length shouldBe 2
-  }
-
-  "parse()" should "handle errors" in {
-    val result = QueryParser.parse(
-      s"""S
+      result.error.isDefined shouldBe false
+      result.select.isDefined shouldBe true
+      val select = result.select.get
+      select.columns.length shouldBe 2
+    }
+    it("should handle errors") {
+      val result = QueryParser.parse(
+        s"""S
       """.stripMargin, db)
-    result.error.isDefined shouldBe true
-    result.select.isDefined shouldBe false
-    val error = result.error.get
-    error.pos shouldBe 0
-    error.msg shouldBe "select expected"
-  }
-  "parse()" should "identify invalid columns" in {
-    val result = QueryParser.parse(
-      s"""
-         |SELECT country1, city
-         |FROM city JOIN country ON city.country_id = country.country_id
-         |WHERE city IN ?{availableCities}
+      result.error.isDefined shouldBe true
+      result.select.isDefined shouldBe false
+      val error = result.error.get
+      error.pos shouldBe 0
+      error.msg shouldBe "select expected"
+    }
+    it("should identify invalid columns") {
+      val result = QueryParser.parse(
+        s"""
+           |SELECT country1, city
+           |FROM city JOIN country ON city.country_id = country.country_id
+           |WHERE city IN ?{availableCities}
       """.stripMargin, db)
-    result.error.get.msg shouldBe "column not found country1"
+      result.error.get.msg shouldBe "column not found country1"
+    }
   }
 }

@@ -71,7 +71,12 @@ class SQL99Parser extends SQLParser with TokenParsers with PackratParsers {
     case class Delimiter(chars: String) extends Token
   }
 
-  class SQLLexical extends Lexical with SQLTokens {
+  trait SQLLexical extends Lexical with SQLTokens {
+    def keywords: Set[String]
+    def delimiters: Set[String]
+  }
+
+  class BaseSQLLexical extends SQLLexical {
 
     lazy val whitespace = rep(whitespaceChar | blockComment | lineComment)
 
@@ -123,9 +128,9 @@ class SQL99Parser extends SQLParser with TokenParsers with PackratParsers {
 
   }
 
-  override val lexical = new SQLLexical
+  override val lexical: SQLLexical = new BaseSQLLexical
 
-  implicit def stringLiteralToKeywordOrDelimiter(chars: String) = {
+  implicit def stringLiteralToKeywordOrDelimiter(chars: String): Parser[String] = {
     if(lexical.keywords.contains(chars) || lexical.delimiters.contains(chars)) {
       (accept(lexical.Keyword(chars)) | accept(lexical.Delimiter(chars))) ^^ (_.chars) withFailureMessage(s"$chars expected")
     }
@@ -203,14 +208,14 @@ class SQL99Parser extends SQLParser with TokenParsers with PackratParsers {
 
   lazy val not = (precExpr: Parser[Expression]) => {
     def thisExpr: Parser[Expression] =
-      ( "not" ~> thisExpr ^^ NotExpression
+      ( "not" ~> thisExpr ^^ NotExpression.apply
       | precExpr
       )
     thisExpr
   }
 
   lazy val exists = (precExpr: Parser[Expression]) =>
-    ( "exists" ~> "(" ~> select <~ ")" ^^ ExistsExpression
+    ( "exists" ~> "(" ~> select <~ ")" ^^ ExistsExpression.apply
     | precExpr
     )
 
@@ -296,14 +301,14 @@ class SQL99Parser extends SQLParser with TokenParsers with PackratParsers {
     rep1("when" ~> expr ~ ("then" ~> expr)) ^^ { _.map { case a ~ b => (a, b) } }
 
   lazy val simpleExpr = (_: Parser[Expression]) =>
-    ( literal                ^^ LiteralExpression
+    ( literal                ^^ LiteralExpression.apply
     | function
     | countStar
     | cast
     | caseWhen
-    | column                 ^^ ColumnExpression
-    | "(" ~> select <~ ")"   ^^ SubSelectExpression
-    | "(" ~> expr <~ ")"     ^^ ParenthesedExpression
+    | column                 ^^ ColumnExpression.apply
+    | "(" ~> select <~ ")"   ^^ SubSelectExpression.apply
+    | "(" ~> expr <~ ")"     ^^ ParenthesedExpression.apply
     | expressionPlaceholder
     )
 
@@ -391,7 +396,7 @@ class SQL99Parser extends SQLParser with TokenParsers with PackratParsers {
 
   lazy val groupingSet =
     ( "(" ~ ")"                       ^^^ GroupingSet(Nil)
-    | "(" ~> repsep(expr, ",") <~ ")" ^^  GroupingSet
+    | "(" ~> repsep(expr, ",") <~ ")" ^^  GroupingSet.apply
     )
 
   lazy val groupingSetOrExpr =
@@ -400,10 +405,10 @@ class SQL99Parser extends SQLParser with TokenParsers with PackratParsers {
     )
 
   lazy val group =
-    ( ("grouping" ~ "sets") ~> ("(" ~> repsep(groupingSet, ",")  <~ ")")  ^^ GroupByGroupingSets
-    | "rollup" ~> ("(" ~> repsep(groupingSetOrExpr, ",") <~ ")")          ^^ GroupByRollup
-    | "cube" ~> ("(" ~> repsep(groupingSetOrExpr, ",") <~ ")")            ^^ GroupByCube
-    | expr                                                                ^^ GroupByExpression
+    ( ("grouping" ~ "sets") ~> ("(" ~> repsep(groupingSet, ",")  <~ ")")  ^^ GroupByGroupingSets.apply
+    | "rollup" ~> ("(" ~> repsep(groupingSetOrExpr, ",") <~ ")")          ^^ GroupByRollup.apply
+    | "cube" ~> ("(" ~> repsep(groupingSetOrExpr, ",") <~ ")")            ^^ GroupByCube.apply
+    | expr                                                                ^^ GroupByExpression.apply
     )
 
   lazy val groupBy =

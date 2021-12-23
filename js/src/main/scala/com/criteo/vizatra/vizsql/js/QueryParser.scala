@@ -1,12 +1,12 @@
 package com.criteo.vizatra.vizsql.js
 
-import com.criteo.vizatra.vizsql.js.common._
+import com.criteo.vizatra.vizsql.js.common.*
 import com.criteo.vizatra.vizsql.{DB, Query, VizSQL}
 
-import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.JSConverters.*
+import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 
-@JSExport("QueryParser")
+@JSExportTopLevel("QueryParser")
 object QueryParser {
   @JSExport
   def parse(query: String, db: DB): ParseResult =

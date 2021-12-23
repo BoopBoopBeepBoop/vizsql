@@ -7,7 +7,7 @@ import scala.util.parsing.input.CharArrayReader.EofCh
 case class HiveDialect(udfs: Map[String, SQLFunction]) extends Dialect {
 
   lazy val parser = new SQL99Parser {
-    override val lexical = new SQLLexical {
+    override val lexical = new BaseSQLLexical {
       override val keywords = SQL99Parser.keywords ++ Set(
         "rlike", "regexp", "limit", "lateral", "view", "distribute", "sort", "cluster", "semi",
         "tablesample", "bucket", "out", "of", "percent")
@@ -34,16 +34,16 @@ case class HiveDialect(udfs: Map[String, SQLFunction]) extends Dialect {
       expr ~ ("." ~> ident) ^^ { case e ~ f => StructAccessExpr(e, f) }
 
     override lazy val simpleExpr = (_: Parser[Expression]) =>
-      ( literal                ^^ LiteralExpression
+      ( literal                ^^ LiteralExpression.apply
       | structAccessExpr
       | mapOrArrayAccessExpr
       | function
       | countStar
       | cast
       | caseWhen
-      | column                 ^^ ColumnOrStructAccessExpression
-      | "(" ~> select <~ ")"   ^^ SubSelectExpression
-      | "(" ~> expr <~ ")"     ^^ ParenthesedExpression
+      | column                 ^^ ColumnOrStructAccessExpression.apply
+      | "(" ~> select <~ ")"   ^^ SubSelectExpression.apply
+      | "(" ~> expr <~ ")"     ^^ ParenthesedExpression.apply
       | expressionPlaceholder
       )
 

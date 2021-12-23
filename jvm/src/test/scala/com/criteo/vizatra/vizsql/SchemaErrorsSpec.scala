@@ -1,13 +1,15 @@
 package com.criteo.vizatra.vizsql
 
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{EitherValues, Matchers, PropSpec}
+import org.scalatest.EitherValues
 import sql99._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.propspec.AnyPropSpecLike
 
 /**
   * Test cases for schema errors
   */
-class SchemaErrorsSpec extends PropSpec with Matchers with EitherValues {
+class SchemaErrorsSpec extends AnyPropSpecLike with Matchers with EitherValues {
 
     val invalidSQL99SelectStatements = TableDrivenPropertyChecks.Table(
       ("SQL", "Expected error"),

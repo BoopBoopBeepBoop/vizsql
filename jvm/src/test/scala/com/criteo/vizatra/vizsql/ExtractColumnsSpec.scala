@@ -1,10 +1,12 @@
 package com.criteo.vizatra.vizsql
 
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.propspec.AnyPropSpecLike
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{Matchers, EitherValues, PropSpec}
-import sql99._
+import org.scalatest.EitherValues
+import sql99.*
 
-class ExtractColumnsSpec extends PropSpec with Matchers with EitherValues {
+class ExtractColumnsSpec extends AnyPropSpecLike with Matchers with EitherValues {
 
   val validSQL99SelectStatements = TableDrivenPropertyChecks.Table(
     ("SQL", "Expected Columns"),

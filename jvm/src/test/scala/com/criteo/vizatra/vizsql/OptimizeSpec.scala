@@ -1,8 +1,9 @@
 package com.criteo.vizatra.vizsql
 
-import org.scalatest.{Matchers, FlatSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.flatspec.AnyFlatSpecLike
 
-class OptimizeSpec extends FlatSpec with Matchers {
+class OptimizeSpec extends AnyFlatSpecLike with Matchers {
 
   val CASE_QUERY =
     """SELECT

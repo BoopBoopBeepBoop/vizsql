@@ -1,9 +1,11 @@
 package com.criteo.vizatra.vizsql
 
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{Matchers, EitherValues, PropSpec}
+import org.scalatest.EitherValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.propspec.AnyPropSpecLike
 
-class FormatSQLSpec extends PropSpec with Matchers with EitherValues {
+class FormatSQLSpec extends AnyPropSpecLike with Matchers with EitherValues {
 
   val examples = TableDrivenPropertyChecks.Table(
     ("Input SQL", "Formatted SQL"),

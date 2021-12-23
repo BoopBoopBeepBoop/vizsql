@@ -2,10 +2,11 @@ package com.criteo.vizatra.vizsql.js
 
 import com.criteo.vizatra.vizsql.DB
 import com.criteo.vizatra.vizsql._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.funspec.AnyFunSpecLike
+import org.scalatest.matchers.should.Matchers
 
-class DatabaseSpec extends FlatSpec with Matchers {
-  implicit val dialect = sql99.dialect
+class DatabaseSpec extends AnyFunSpecLike with Matchers {
+  implicit val dialect: Dialect = sql99.dialect
   val db = DB(schemas = List(
     Schema(
       "sakila",
@@ -23,9 +24,11 @@ class DatabaseSpec extends FlatSpec with Matchers {
     )
   ))
 
-  "Database class" should "be able to parse queries" in {
-    val database = new Database(db)
-    val res = database.parse("SELECT city_id FROM city")
-    res.select.get.columns.head.name shouldEqual "city_id"
+  describe("Database") {
+    it("should be able to parse queries") {
+      val database = new Database(db)
+      val res = database.parse("SELECT city_id FROM city")
+      res.select.get.columns.head.name shouldEqual "city_id"
+    }
   }
 }
